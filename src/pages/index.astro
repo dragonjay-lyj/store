@@ -1,11 +1,119 @@
----
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+--- 
+import MainLayout from '../layouts/Layout.astro';
+import App from '../components/react/App.jsx';
+import { getCollection } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const products = await getCollection('products');
+// 传递 slug 和其他数据给 React 组件
+const productData = products.map(p => ({
+  ...p.data,
+  slug: p.slug
+}));
+const isEmpty = productData.length === 0;
+const theme = {
+  backgroundColor: 'bg-gray-50',
+  textColor: 'text-gray-800',
+  primaryColor: 'from-pink-400',
+  secondaryColor: 'to-purple-500'
+};
 ---
+<MainLayout title="首页 | 二次元商品贩卖网站" theme={theme}>
+  <div class="text-center mb-6 sm:mb-8 px-2 sm:px-0 relative z-10">
+    <h1 class="text-lg sm:text-2xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 transition-all duration-700 animate-titleWave">
+      欢迎来到二次元商品世界
+    </h1>
+    {isEmpty && (
+      <div class="mt-2 sm:mt-4 p-4 bg-gray-100 rounded-lg shadow-inner animate-fadeIn mx-2 sm:mx-0">
+        <p class="text-gray-500 text-sm sm:text-base">
+          抱歉，当前暂无商品数据。请稍后再试。
+        </p>
+        <button
+          onclick="window.location.reload()"
+          class="mt-2 text-purple-500 hover:text-purple-700 text-sm transition-colors duration-200 transform hover:scale-105"
+        >
+          重新加载
+        </button>
+      </div>
+    )}
+  </div>
+  <div class="transition-all duration-500 animate-contentFadeIn relative z-10 mx-2 sm:mx-0">
+    <App
+      initialProducts={productData}
+      pageSize={12}
+      theme={{
+        primaryColor: 'purple',
+        secondaryColor: 'pink'
+      }}
+      client:only
+    />
+  </div>
+</MainLayout>
 
-<Layout>
-	<Welcome />
-</Layout>
+<style>
+  @keyframes titleWave {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    50% {
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes contentFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @supports (prefers-reduced-motion: reduce) {
+    .animate-titleWave,
+    .animate-contentFadeIn,
+    .animate-fadeIn {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+  
+  /* 触摸滚动优化 */
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+</style>
+
+<script>
+  // 页面加载进度指示器（可选，模拟加载）
+  document.addEventListener('DOMContentLoaded', () => {
+    const progressBar = document.getElementById('page-progress');
+    if (progressBar) {
+      // 模拟页面加载进度
+      setTimeout(() => {
+        progressBar.style.width = '50%';
+        setTimeout(() => {
+          progressBar.style.width = '100%';
+          setTimeout(() => {
+            progressBar.style.opacity = '0';
+          }, 500);
+        }, 300);
+      }, 100);
+    }
+  });
+</script>

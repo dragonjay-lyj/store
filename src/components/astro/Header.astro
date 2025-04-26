@@ -1,0 +1,80 @@
+---
+const { 
+  homeText = "首页", 
+  aboutText = "关于",
+  backgroundGradient = "bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500",
+  backgroundPattern = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC40Ij48cGF0aCBkPSJNMzYgMzRjMCAxIDEgMiAyIDJoMnYtNGgtMmMtMSAwLTIgMS0yIDJ6TTMwIDRDMTMuNDMxIDQgMCAxNy40MzEgMCAzNHMxMy40MzEgMzAgMzAgMzAgMzAtMTMuNDMxIDMwLTMwUzQ2LjU2OSA0IDMwIDR6TTEwLjIyNSA0Mi42OGMtNS41NTYtOS45NDItMi4zLTIyLjUyNyA3LjY0MS0yOC4wODJDMjcuODA5IDkuMDQyIDQwLjM5NSAxMi4yOTcgNDUuOTUgMjIuMjM5YzUuNTU2IDkuOTQzIDIuMyAyMi41MjgtNy42NDEgMjguMDgyLTkuOTQyIDUuNTU1LTIyLjUyNyAyLjMtMjguMDg0LTcuNjQxeiIvPjwvZz48L2c+PC9zdmc+"
+} = Astro.props;
+---
+<header class={`text-white p-4 shadow-xl sticky top-0 z-20 ${backgroundGradient} relative transition-all duration-500 animate-headerFadeIn`}>
+  <div class="container mx-auto flex justify-between items-center flex-wrap gap-2 sm:gap-4 px-2 sm:px-0">
+    <!-- 预留品牌标识插槽 -->
+    <div class="flex items-center">
+      <slot name="brand">
+        <span class="text-lg sm:text-xl font-bold text-pink-100 mr-2 sm:mr-4">二次元商城</span>
+      </slot>
+      <nav class="flex gap-2 sm:gap-6">
+        <a href="/" class="hover:text-pink-100 transition-all duration-200 text-sm sm:text-lg font-semibold transform hover:scale-110 relative group touch-manipulation active:bg-pink-200/30 active:text-pink-100">
+          {homeText}
+          <!-- 链接悬停发光效果，优化性能 -->
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 bg-pink-300 rounded-full supports-reduced-motion:opacity-0"></div>
+        </a>
+        <a href="/about" class="hover:text-pink-100 transition-all duration-200 text-sm sm:text-lg font-semibold transform hover:scale-110 relative group touch-manipulation active:bg-pink-200/30 active:text-pink-100">
+          {aboutText}
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 bg-pink-300 rounded-full supports-reduced-motion:opacity-0"></div>
+        </a>
+        <!-- 预留额外导航插槽，提供默认样式 -->
+        <div class="flex gap-2 sm:gap-6 text-sm sm:text-lg font-semibold text-white">
+          <slot name="extra-nav" />
+        </div>
+      </nav>
+    </div>
+    <div class="w-36 sm:w-64 max-w-full mt-2 sm:mt-0">
+      <!-- 预留搜索框位置，React 组件将插入此处 -->
+      <slot name="search" />
+    </div>
+    <!-- 预留汉堡菜单插槽，支持小屏幕导航折叠 -->
+    <div class="flex items-center sm:hidden">
+      <slot name="hamburger-menu">
+        <button class="text-white hover:text-pink-100 transition-colors duration-200">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </slot>
+    </div>
+  </div>
+  <!-- 背景装饰效果，可配置图案 -->
+  <div class="absolute inset-0 opacity-10 -z-10 bg-repeat" style={`background-image: url('${backgroundPattern}');`}></div>
+</header>
+
+<style>
+  @keyframes headerFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @supports (prefers-reduced-motion: reduce) {
+    .animate-headerFadeIn {
+      animation: none !important;
+      transform: none !important;
+    }
+    .group-hover\:opacity-20 {
+      opacity: 0 !important;
+    }
+    .active\:bg-pink-200\/30 {
+      background-color: transparent !important;
+    }
+  }
+  
+  /* 触摸反馈涟漪效果（可选，需进一步浏览器兼容性测试） */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+</style>

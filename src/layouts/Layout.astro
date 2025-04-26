@@ -1,22 +1,123 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+--- 
+const { 
+  title = "二次元商品贩卖网站", 
+  description = "探索最新的二次元手办和周边商品。", 
+  image = "/images/default-og-image.jpg",
+  theme = {
+    backgroundColor: 'bg-gray-50',
+    textColor: 'text-gray-800',
+    primaryColor: 'from-pink-400',
+    secondaryColor: 'to-purple-500',
+    backgroundPattern: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC40Ij48cGF0aCBkPSJNMzYgMzRjMCAxIDEgMiAyIDJoMnYtNGgtMmMtMSAwLTIgMS0yIDJ6TTMwIDRDMTMuNDMxIDQgMCAxNy40MzEgMCAzNHMxMy40MzEgMzAgMzAgMzAgMzAtMTMuNDMxIDMwLTMwUzQ2LjU2OSA0IDMwIDR6TTEwLjIyNSA0Mi42OGMtNS41NTYtOS45NDItMi4zLTIyLjUyNyA3LjY0MS0yOC4wODJDMjcuODA5IDkuMDQyIDQwLjM5NSAxMi4yOTcgNDUuOTUgMjIuMjM5YzUuNTU2IDkuOTQzIDIuMyAyMi41MjgtNy42NDEgMjguMDgyLTkuOTQyIDUuNTU1LTIyLjUyNyAyLjMtMjguMDg0LTcuNjQxeiIvPjwvZz48L2c+PC9zdmc+"
+  },
+  enableDarkMode = false // 是否启用暗黑模式支持
+} = Astro.props;
+import Footer from "../components/astro/Footer.astro";
+import Header from "../components/astro/Header.astro";
+import '../styles/global.css';
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/styles/global.css" />
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="二次元商品贩卖网站" />
+    <meta property="og:locale" content="zh_CN" />
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="twitter:site" content="@AnimeShop" />
+    <slot name="head" />
+    <!-- 暗黑模式支持 -->
+    {enableDarkMode && (
+      <script>
+        // 检测用户系统偏好或本地存储主题
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark' || (savedTheme === null && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      </script>
+    )}
+  </head>
+  <body class={`min-h-screen flex flex-col font-sans ${theme.backgroundColor} ${theme.textColor} relative transition-all duration-1000 animate-pageFadeIn bg-gradient-to-b ${theme.primaryColor} ${theme.secondaryColor} bg-opacity-10 scroll-smooth`}>
+    <Header />
+    <main class="container mx-auto p-2 sm:p-6 flex-grow transition-all duration-700 animate-mainFadeIn relative z-10">
+      <slot />
+    </main>
+    <Footer />
+    <slot name="structured-data" />
+    <!-- 背景装饰效果，增强二次元风格 -->
+    <div class="absolute inset-0 opacity-5 -z-10 bg-repeat" style={`background-image: url('${theme.backgroundPattern}');`}></div>
+    <!-- 返回顶部按钮，移动端优化 -->
+    <button 
+      id="back-to-top" 
+      class="fixed bottom-4 right-4 bg-purple-500 text-white p-2 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-purple-600 transform hover:scale-110 z-30"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+      </svg>
+    </button>
+    <!-- 页面加载进度条 -->
+    <div 
+      id="page-progress" 
+      class="fixed top-0 left-0 h-1 bg-purple-500 transition-all duration-200 z-40"
+      style="width: 0%"
+    ></div>
+  </body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+  @keyframes pageFadeIn {
+    from {
+      opacity: 0;
+      background-position: 0 0;
+    }
+    to {
+      opacity: 1;
+      background-position: 0 100px;
+    }
+  }
+  
+  @keyframes mainFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @supports (prefers-reduced-motion: reduce) {
+    .animate-pageFadeIn,
+    .animate-mainFadeIn {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+  
+  /* 触摸滚动优化 */
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* 返回顶部按钮显示逻辑 */
+  body.scrolled #back-to-top {
+    opacity: 1;
+    visibility: visible;
+  }
 </style>

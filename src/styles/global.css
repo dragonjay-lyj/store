@@ -1,0 +1,229 @@
+@import "tailwindcss";
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ripple {
+  from {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@supports (prefers-reduced-motion: reduce) {
+  .supports-reduced-motion {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+  .active\:animate-ripple {
+    animation: none !important;
+  }
+  .group-hover\:brightness-110 {
+    brightness: 1 !important;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@supports (prefers-reduced-motion: reduce) {
+  .supports-reduced-motion {
+    animation: none !important;
+  }
+}
+
+@keyframes pulseDot {
+  0% {
+    transform: scale(1.25);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1.25);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes touchIndicator {
+  0% {
+    opacity: 0.3;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateX(10px);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateX(0);
+  }
+}
+
+@supports (prefers-reduced-motion: reduce) {
+  .supports-reduced-motion {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+  .animate-pulseDot {
+    animation: none !important;
+  }
+  .animate-pulseRing {
+    animation: none !important;
+  }
+  .animate-touchIndicator {
+    animation: none !important;
+  }
+  .group-hover\:scale-110 {
+    transform: scale(1) !important;
+  }
+  .group-hover\:opacity-20 {
+    opacity: 0 !important;
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes modalFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes modalBounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes modalBounceOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modalSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+}
+
+@keyframes ripple {
+  from {
+    transform: scale(0);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@supports (prefers-reduced-motion: reduce) {
+  .animate-modalFadeIn,
+  .animate-modalFadeOut,
+  .animate-modalBounceIn,
+  .animate-modalBounceOut,
+  .animate-modalSlideIn,
+  .animate-modalSlideOut {
+    animation: none !important;
+    transform: none !important;
+  }
+  .hover\:scale-105 {
+    transform: scale(1) !important;
+  }
+  .group-hover\:opacity-20 {
+    opacity: 0 !important;
+  }
+  .active\:animate-ripple {
+    animation: none !important;
+  }
+}

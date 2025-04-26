@@ -1,0 +1,68 @@
+--- 
+const { 
+  homeText = "首页", 
+  aboutText = "关于", 
+  copyrightText = "© 2023 二次元商品贩卖网站. All rights reserved.",
+  backgroundGradient = "bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-500",
+  backgroundPattern = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC40Ij48cGF0aCBkPSJNMzYgMzRjMCAxIDEgMiAyIDJoMnYtNGgtMmMtMSAwLTIgMS0yIDJ6TTMwIDRDMTMuNDMxIDQgMCAxNy40MzEgMCAzNHMxMy40MzEgMzAgMzAgMzAgMzAtMTMuNDMxIDMwLTMwUzQ2LjU2OSA0IDMwIDR6TTEwLjIyNSA0Mi42OGMtNS41NTYtOS45NDItMi4zLTIyLjUyNyA3LjY0MS0yOC4wODJDMjcuODA5IDkuMDQyIDQwLjM5NSAxMi4yOTcgNDUuOTUgMjIuMjM5YzUuNTU2IDkuOTQzIDIuMyAyMi41MjgtNy42NDEgMjguMDgyLTkuOTQyIDUuNTU1LTIyLjUyNyAyLjMtMjguMDg0LTcuNjQxeiIvPjwvZz48L2c+PC9zdmc+"
+} = Astro.props;
+---
+<footer class={`text-white py-6 mt-auto shadow-xl ${backgroundGradient} relative z-10 transition-all duration-500 animate-footerFadeIn`}>
+  <div class="container mx-auto text-center px-4 sm:px-6">
+    <div class="flex justify-center gap-4 sm:gap-6 mb-4 flex-wrap">
+      <a href="/" class="hover:text-pink-100 transition-all duration-200 text-sm sm:text-lg font-semibold transform hover:scale-110 relative group touch-manipulation active:bg-pink-200/30 active:text-pink-100">
+        {homeText}
+        {/* 链接悬停发光效果，优化性能 */}
+        <div class="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 bg-pink-300 rounded-full supports-reduced-motion:opacity-0"></div>
+      </a>
+      <a href="/about" class="hover:text-pink-100 transition-all duration-200 text-sm sm:text-lg font-semibold transform hover:scale-110 relative group touch-manipulation active:bg-pink-200/30 active:text-pink-100">
+        {aboutText}
+        <div class="absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 bg-pink-300 rounded-full supports-reduced-motion:opacity-0"></div>
+      </a>
+      <!-- 预留插槽，支持未来扩展（如社交媒体链接），提供默认样式 -->
+      <div class="flex justify-center gap-4 sm:gap-6 flex-wrap">
+        <slot name="extra-links" />
+      </div>
+    </div>
+    <p class="text-xs sm:text-sm text-pink-100 opacity-80 hover:opacity-100 transition-opacity duration-300">
+      {copyrightText}
+    </p>
+    <!-- 预留插槽，支持额外内容，提供默认样式 -->
+    <div class="mt-2 text-xs sm:text-sm text-pink-100 opacity-80">
+      <slot name="extra-content" />
+    </div>
+  </div>
+  <!-- 背景装饰效果，可配置图案 -->
+  <div class="absolute inset-0 opacity-10 -z-10 bg-repeat" style={`background-image: url('${backgroundPattern}');`}></div>
+</footer>
+
+<style>
+  @keyframes footerFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @supports (prefers-reduced-motion: reduce) {
+    .animate-footerFadeIn {
+      animation: none !important;
+      transform: none !important;
+    }
+    .group-hover\:opacity-20 {
+      opacity: 0 !important;
+    }
+    .active\:bg-pink-200\/30 {
+      background-color: transparent !important;
+    }
+  }
+  
+  /* 触摸反馈涟漪效果（可选，需进一步浏览器兼容性测试） */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+</style>
