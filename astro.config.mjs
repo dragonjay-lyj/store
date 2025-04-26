@@ -20,7 +20,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()]
   },
-
+  site: 'https://shop.dragonjay.top',
   integrations: [sitemap(), react(), mdx(), robotsTxt(), compressor()],
   adapter: vercel(),
   output: 'server',

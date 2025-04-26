@@ -3,6 +3,7 @@ import MainLayout from '../../layouts/Layout.astro';
 import ImageCarousel from '../../components/react/ImageCarousel.jsx';
 import NSFWModal from '../../components/react/NSFWModal.jsx';
 import { getCollection } from 'astro:content';
+import TwikooComments from '../../components/astro/TwikooComments.astro';
 
 export async function getStaticPaths() {
   const products = await getCollection('products');
@@ -53,6 +54,7 @@ export const prerender = true;
       </a>
       <div class="prose text-gray-700 text-sm sm:text-base">
         <Content />
+        <TwikooComments envId="https://superlative-valkyrie-233b02.netlify.app/.netlify/functions/twikoo" lang="zh-CN" />
       </div>
     </div>
   </div>
