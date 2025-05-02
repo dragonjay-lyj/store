@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function ProductList({ products }) {
   const [filteredProducts, setFilteredProducts] = useState(products);
@@ -142,7 +142,7 @@ export default function ProductList({ products }) {
                 </div>
                 <div className="flex justify-between items-center mt-2">
                   {product.data.price && (
-                    <p className="text-lg font-bold text-red-600 animate-fade-in">${product.data.price.toFixed(2)}</p>
+                    <p className="text-lg font-bold text-red-600 animate-fade-in">￥{product.data.price.toFixed(2)}</p>
                   )}
                   <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform group-hover:translate-x-1">
                     详情 <span>&rarr;</span>
