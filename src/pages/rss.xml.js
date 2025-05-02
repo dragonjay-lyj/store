@@ -11,7 +11,7 @@ const products = await getCollection('products');
         title: product.data.title,
         pubDate: product.data.publishDate,
         description: product.data.description,
-        link: `/product/${product.id.replace(/\.mdx$/, '')}`,
+        link: `/products/${product.id.replace(/\.mdx$/, '')}`,
       })),
   });
 }

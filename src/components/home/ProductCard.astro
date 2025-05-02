@@ -1,0 +1,239 @@
+---
+const { product } = Astro.props;
+const { title, coverImages, seller, sellerAvatar, ageRestricted, nsfw, price } = product.data;
+---
+
+<li class="product-card bg-white rounded-xl shadow-md overflow-hidden transition-transform duration-300 hover:scale-105 hover:shadow-xl cursor-pointer relative group" data-id={product.slug}>
+  <!-- 上部分：商品封面图，宽高比 3:4，懒加载 -->
+  <div class="relative w-full h-0 pb-[133.33%] bg-gray-200 overflow-hidden">
+    <img
+      src={coverImages[0]}
+      alt={`${title} 封面`}
+      class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+      loading="lazy"
+      decoding="async"
+      fetchpriority="low"
+    />
+    <!-- 标签或限制标记 -->
+    {ageRestricted || nsfw ? (
+      <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md animate-pulse">
+        {ageRestricted ? "18+" : ""} {nsfw ? "NSFW" : ""}
+      </div>
+    ) : (
+      <div class="absolute top-2 right-2 bg-indigo-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        查看详情
+      </div>
+    )}
+  </div>
+  <!-- 下部分：文字内容 -->
+  <div class="p-4 text-gray-800 bg-gradient-to-b from-white to-gray-50 relative z-10">
+    <h3 class="text-lg font-semibold mb-2 truncate" title={title}>{title}</h3>
+    <div class="flex items-center mb-2">
+      {sellerAvatar && (
+        <img
+          src={sellerAvatar}
+          alt={`${seller} 头像`}
+          class="w-6 h-6 rounded-full mr-2 border-2 border-indigo-200 shadow-sm transition-transform duration-300 group-hover:scale-110"
+          loading="lazy"
+          decoding="async"
+          fetchpriority="low"
+        />
+      )}
+      <span class="text-sm text-gray-600 truncate">{seller}</span>
+    </div>
+    <div class="flex justify-between items-center mt-2">
+      {price && (
+        <p class="text-lg font-bold text-red-600 animate-fade-in">${price.toFixed(2)}</p>
+      )}
+      <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform group-hover:translate-x-1">
+        详情 <span>&rarr;</span>
+      </button>
+    </div>
+  </div>
+</li>
+
+<!-- 适宜年龄弹窗（仅当 ageRestricted 为 true 时渲染相关脚本和弹窗结构） -->
+{ageRestricted && (
+  <div class="age-modal hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-50 flex items-center justify-center transition-opacity duration-500" data-id={product.slug}>
+    <div class="bg-white rounded-2xl p-6 w-11/12 max-w-md shadow-2xl transform transition-all duration-500 scale-105 bg-gradient-to-b from-white to-gray-50 animate-fade-in">
+      <div class="flex items-center gap-2 mb-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-6 h-6 text-red-500 animate-pulse"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+          />
+        </svg>
+        <h2 class="text-xl md:text-2xl font-bold text-gray-800">年龄限制提示</h2>
+      </div>
+      <p class="text-gray-700 mb-6 leading-relaxed text-base md:text-lg">
+        此商品仅限 18 岁以上用户购买，您确认符合年龄要求吗？
+      </p>
+      <div class="flex flex-col sm:flex-row justify-end gap-3">
+        <button
+          class="cancel-btn px-4 py-3 bg-gray-200 text-gray-800 rounded-xl hover:bg-gray-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-transform duration-200 min-w-[80px] min-h-[44px] shadow-md"
+        >
+          取消
+        </button>
+        <button
+          class="confirm-btn px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl hover:from-indigo-700 hover:to-purple-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-transform duration-200 min-w-[80px] min-h-[44px] shadow-md"
+        >
+          确认
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+<!-- 客户端脚本：处理点击和弹窗逻辑 -->
+{ageRestricted && (
+  <script define:vars={{ slug: product.slug }}>
+    document.addEventListener('DOMContentLoaded', () => {
+      const card = document.querySelector(`.product-card[data-id="${slug}"]`);
+      const modal = document.querySelector(`.age-modal[data-id="${slug}"]`);
+      const cancelBtn = modal ? modal.querySelector('.cancel-btn') : null;
+      const confirmBtn = modal ? modal.querySelector('.confirm-btn') : null;
+      
+      if (card && modal && cancelBtn && confirmBtn) {
+        // 卡片点击事件：如果有限制，显示弹窗，否则直接跳转
+        card.addEventListener('click', (e) => {
+          e.preventDefault();
+          modal.classList.remove('hidden');
+          modal.classList.add('opacity-100');
+        });
+        
+        // 取消按钮关闭弹窗
+        cancelBtn.addEventListener('click', () => {
+          modal.classList.add('hidden');
+          modal.classList.remove('opacity-100');
+        });
+        
+        // 确认按钮关闭弹窗并跳转
+        confirmBtn.addEventListener('click', () => {
+          modal.classList.add('hidden');
+          modal.classList.remove('opacity-100');
+          // 提供用户反馈（示例：短暂提示）
+          const tempDiv = document.createElement('div');
+          tempDiv.textContent = '已确认';
+          tempDiv.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-4 py-3 rounded-lg shadow-xl z-50 flex items-center gap-2 animate-bounce-in';
+          tempDiv.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            ${tempDiv.textContent}
+          `;
+          document.body.appendChild(tempDiv);
+          setTimeout(() => tempDiv.remove(), 3000);
+          // 跳转到详情页
+          window.location.href = `/products/${slug}`;
+        });
+        
+        // ESC 键关闭弹窗
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            modal.classList.add('hidden');
+            modal.classList.remove('opacity-100');
+          }
+        });
+      }
+    });
+  </script>
+)}
+
+<!-- 如果没有年龄限制，直接点击跳转 -->
+{!ageRestricted && (
+  <script define:vars={{ slug: product.slug }}>
+    document.addEventListener('DOMContentLoaded', () => {
+      const card = document.querySelector(`.product-card[data-id="${slug}"]`);
+      if (card) {
+        card.addEventListener('click', () => {
+          window.location.href = `/products/${slug}`;
+        });
+      }
+    });
+  </script>
+)}
+
+<style>
+  /* 响应式设计：移动端堆叠显示，触摸目标最小尺寸 */
+  @media (max-width: 640px) {
+    .product-card {
+      margin-bottom: 1.5rem;
+    }
+    .product-card h3 {
+      min-height: 44px; /* 确保触摸目标符合最小尺寸要求 */
+      line-height: 1.5;
+      font-size: 1rem; /* 移动端字体稍小 */
+    }
+    .product-card .text-sm {
+      font-size: 0.85rem; /* 移动端字体调整 */
+    }
+    .product-card .text-lg {
+      font-size: 1.1rem; /* 移动端价格字体调整 */
+    }
+  }
+  
+  /* 弹窗动画效果 */
+  .age-modal {
+    opacity: 0;
+  }
+  .age-modal.opacity-100 {
+    opacity: 1;
+  }
+  
+  /* 确保弹窗内按钮符合触摸目标尺寸 */
+  .confirm-btn, .cancel-btn {
+    min-width: 80px;
+    min-height: 44px;
+  }
+
+  /* 自定义动画 */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0.3);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .animate-bounce-in {
+    animation: bounce-in 0.6s ease-out forwards;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+  .animate-pulse {
+    animation: pulse 2s ease-in-out infinite;
+  }
+</style>
